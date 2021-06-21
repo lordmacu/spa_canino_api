@@ -35,13 +35,11 @@ class ProductsAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $products = $this->productsRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        
+        $Product= new Products();
+        $products = $Product->getProducts();
 
-        return $this->sendResponse(ProductsResource::collection($products), 'Products retrieved successfully');
+        return $this->sendResponse($products, 'Products retrieved successfully');
     }
 
     /**

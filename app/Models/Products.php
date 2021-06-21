@@ -21,6 +21,8 @@ use Illuminate\Database\Eloquent\Model as Model;
 class Products extends Model
 {
 
+    
+    
 
     public $table = 'products';
     
@@ -28,7 +30,13 @@ class Products extends Model
     const UPDATED_AT = 'updated_at';
 
 
-
+    public function category(){
+       return  $this->hasOne(\App\Models\ProductCategory::class,"id","category_id");
+    }
+    
+    public function getProducts(){
+        return $this->with("category")->get();
+    }
 
     public $fillable = [
         'title',

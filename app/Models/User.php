@@ -21,6 +21,16 @@ class User extends \TCG\Voyager\Models\User
         'email',
         'password',
     ];
+    public function getUserById($email){
+        return $this->where("email",$email)->first();
+    }
+    
+      public function checkPasswordAndEmail($email,$password){
+        return $this->where("email",$email)
+               // ->where("password",$password)
+                ->first();
+    }
+
 
     /**
      * The attributes that should be hidden for arrays.

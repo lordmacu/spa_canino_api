@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+ 
 
 /*
 |--------------------------------------------------------------------------
@@ -19,20 +20,38 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-Route::resource('categories', App\Http\Controllers\API\CategoriesAPIController::class);
+Route::resource('categories',  CategoriesAPIController::class);
 
-Route::resource('profiles', App\Http\Controllers\API\ProfileAPIController::class);
+Route::resource('profiles', ProfileAPIController::class);
 
-Route::resource('abouts', App\Http\Controllers\API\AboutAPIController::class);
+Route::resource('abouts',  AboutAPIController::class);
 
-Route::resource('contacts', App\Http\Controllers\API\ContactAPIController::class);
+Route::resource('contacts', ContactAPIController::class);
 
-Route::resource('products', App\Http\Controllers\API\ProductsAPIController::class);
+Route::resource('products',  ProductsAPIController::class);
 
-Route::resource('pets', App\Http\Controllers\API\PetsAPIController::class);
+Route::resource('pets', PetsAPIController::class);
 
-Route::resource('coupons', App\Http\Controllers\API\CouponsAPIController::class);
+Route::resource('coupons', CouponsAPIController::class);
 
-Route::resource('appointments', App\Http\Controllers\API\AppointmentAPIController::class);
+Route::resource('appointments',  AppointmentAPIController::class);
 
-Route::resource('pet_histories', App\Http\Controllers\API\PetHistoryAPIController::class);
+Route::resource('pet_histories', PetHistoryAPIController::class);
+
+Route::resource('banners', BannerAPIController::class);
+
+Route::resource('doctors', DoctorAPIController::class);
+
+Route::resource('product_categories', App\Http\Controllers\API\ProductCategoryAPIController::class);
+
+Route::resource('statuses', App\Http\Controllers\API\StatusAPIController::class);
+
+Route::resource('populars', PopularAPIController::class);
+
+
+Route::resource('carts',  CartAPIController::class);
+Route::post('addCart', 'CartAPIController@addCart');
+Route::post('register', 'ProfileAPIController@register');
+Route::post('login', 'ProfileAPIController@login');
+Route::post('getCart', 'CartAPIController@getCart');
+Route::post('deleteItemCart', 'CartAPIController@deleteItemCart');
