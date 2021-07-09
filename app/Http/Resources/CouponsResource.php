@@ -20,6 +20,8 @@ class CouponsResource extends JsonResource
             'price' => $this->price,
             'code' => $this->code,
             'date' => $this->date,
+            'description' => $this->description,
+            'color' => $this->color,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];

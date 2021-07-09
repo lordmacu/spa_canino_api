@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Illuminate\Database\Eloquent\Model as Model;
 
@@ -25,6 +26,7 @@ class Pets extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
+    use SoftDeletes;
 
 
 
@@ -32,7 +34,11 @@ class Pets extends Model
         'name',
         'description',
         'image',
-        'user_id'
+        'raza',
+        'type',
+        'color',
+        'birthday',
+        'status'
     ];
 
     /**
@@ -43,9 +49,13 @@ class Pets extends Model
     protected $casts = [
         'id' => 'integer',
         'name' => 'string',
-        'description' => 'string',
+        'raza' => 'integer',
         'image' => 'string',
-        'user_id' => 'integer'
+        'user_id' => 'string',
+        'type' => 'integer',
+        'color' => 'string',
+        'birthday' => 'string',
+        'status' => 'string'
     ];
 
     /**
@@ -59,6 +69,27 @@ class Pets extends Model
         'image' => 'required|string',
         'user_id' => 'required|integer'
     ];
+    
+    public function raza(){
+        return $this->belongsTo(Raza::class,"raza","id");
+    }
+     public function type(){
+        return $this->belongsTo(Type::class,"type","id");
+    }
+    
+       public function status(){
+        return $this->belongsTo(Type::class,"status","id");
+    }
+    
+    
+    public function getPetsByUser($user){
+        return $this
+                ->where("user_id",$user)
+                ->with("raza")
+                ->with("type")
+                ->with("status")
+                 ->get();
+    }
 
     
 }

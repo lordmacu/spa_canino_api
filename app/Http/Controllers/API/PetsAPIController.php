@@ -5,12 +5,15 @@ namespace App\Http\Controllers\API;
 use App\Http\Requests\API\CreatePetsAPIRequest;
 use App\Http\Requests\API\UpdatePetsAPIRequest;
 use App\Models\Pets;
+use App\Models\Raza;
+use App\Models\Type;
 use App\Repositories\PetsRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\PetsResource;
 use Response;
-
+use Storage;
+use Log;
 /**
  * Class PetsController
  * @package App\Http\Controllers\API
@@ -44,6 +47,75 @@ class PetsAPIController extends AppBaseController
         return $this->sendResponse(PetsResource::collection($pets), 'Pets retrieved successfully');
     }
 
+    public function getMyPets(Request $request){
+        $pet= new Pets();
+        $getPetsByUser=$pet->getPetsByUser($request->get("user_id"));
+        
+        foreach ($getPetsByUser as $value) {
+            $value->image=Storage::url($value->image);
+ 
+        }
+        
+        $raza= Raza::pluck("name");
+        $types=  Type::pluck("name");
+        return array("data"=>$getPetsByUser,"razas"=>$raza,"types"=>$types);
+    }
+    
+    public function deletePet(Request $request){
+        $pet= Pets::find($request->get("petId"));
+        $pet->delete();
+    }
+    
+    public function postPet(Request $request){
+        
+        $birthday= date("Y-m-d H:i:s", strtotime($request->get("petBithdayValue"))); // gives 201101
+
+        Log::error($request->all());
+         
+        if($request->get("petId")==0){
+                    $pet= new Pets();
+        }else{
+            $pet= Pets::find($request->get("petId"));
+        }
+        
+        $pet->user_id=$request->get("user_id");
+        $pet->name=$request->get("name");
+       // $pet->image=$request->get("image");
+        
+        
+        $raza= new Raza();
+        $getRazaByName=$raza->getRazaByName($request->get("raza"));
+        $pet->raza=$getRazaByName->id;
+        
+        $raza= new Type();
+        $getTypeByname=$raza->getTypeByname($request->get("type"));
+        $pet->type=$getTypeByname->id;
+        
+        $pet->color=$request->get("color");
+        $pet->birthday=$birthday;
+        $pet->status=1;
+        $pet->save();
+        
+        
+        
+    }
+    
+    public function setImage(Request $request){
+       // Log::error($request->all());
+        
+            $realImage = base64_decode($request->get("image"));
+            $imageName=time()."_".$request->get("name"); 
+            $path="/pets/".$imageName;
+            file_put_contents(storage_path('app')."/pets/".$imageName, $realImage);
+            
+            $pet= Pets::find($request->get("id"));
+            $pet->image=$path;
+            $pet->save();
+            
+            
+
+    }
+    
     /**
      * Store a newly created Pets in storage.
      * POST /pets

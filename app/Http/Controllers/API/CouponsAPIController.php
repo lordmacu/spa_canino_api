@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Requests\API\CreateCouponsAPIRequest;
 use App\Http\Requests\API\UpdateCouponsAPIRequest;
 use App\Models\Coupons;
+use App\Models\CouponUser;
+
 use App\Repositories\CouponsRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
@@ -42,6 +44,24 @@ class CouponsAPIController extends AppBaseController
         );
 
         return $this->sendResponse(CouponsResource::collection($coupons), 'Coupons retrieved successfully');
+    }
+    public function postCoupon(Request $request){
+        
+ 
+                $CouponUser= new CouponUser();
+                $CouponUser->user_id=$request->get("user");
+                $CouponUser->coupon_id=$request->get("coupon");
+                $CouponUser->save();
+                
+                return array("status"=>200,"data"=>"ok");
+                
+
+    }
+    public function getCouponUser(Request $request){
+        $CouponUser= new CouponUser();
+        
+        $getUsersByCoupons=$CouponUser->getUsersByCoupons($request->get("user"));
+        return array("data"=>$getUsersByCoupons);
     }
 
     /**
